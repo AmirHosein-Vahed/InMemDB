@@ -55,27 +55,57 @@ class PyInMemStore:
             return self._get_ttl(key)
 
 
+    # Bonus feature: List handling
+    
+    def lpush(self, key, *args):
+        with self._lock:
+            if not self._key_exists(key):
+                self.data[key] = {'value': [], 'ttl': -1}
+            self.data[key]['value'].extend(list(args))
+
+    def rpop(self, key):
+        with self._lock:
+            if not self._key_exists(key):
+                raise KeyError("Key doesn't exist.")
+            val = self.data[key]['value'].pop()
+            if len(self.data[key]['value']) == 0:
+                del self.data[key]
+            return val
+
+
 if __name__ == "__main__":
     dbs = PyInMemStore()
+# -----------------------------------------------
+    # print("SET")
+    # dbs.set('test', 'Hello')
+    # assert dbs.get('test') == 'Hello'
 
-    print("SET")
-    dbs.set('test', 'Hello')
-    assert dbs.get('test') == 'Hello'
+    # print("EXPIRE")
+    # dbs.expire('test', 5)
+    # assert dbs.ttl('test') >= 4
 
-    print("EXPIRE")
-    dbs.expire('test', 5)
-    assert dbs.ttl('test') >= 4
+    # print("GET")
+    # time.sleep(6)
+    # assert dbs.get('test') is None
+# -----------------------------------------------
+    # print("\nSET")
+    # dbs.set('test', 'Hello')
+    # assert dbs.get('test') == 'Hello'
 
-    print("GET")
-    time.sleep(6)
-    assert dbs.get('test') is None
+    # print("DELETE")
+    # dbs.delete('test')
+    # assert dbs.get('test') is None
+# -----------------------------------------------
+    print("lpush")
+    dbs.lpush('test', 1, 2, 3)
+    assert dbs.get('test') == [1, 2, 3]
 
-    print("\nSET")
-    dbs.set('test', 'Hello')
-    assert dbs.get('test') == 'Hello'
+    print("rpop")
+    dbs.rpop('test')
+    assert dbs.get('test') == [1, 2]
 
-    print("DELETE")
-    dbs.delete('test')
-    assert dbs.get('test') is None
-
-    print('\nEND')
+    print("rpop")
+    dbs.rpop('test')
+    assert dbs.get('test') == [1]
+# -----------------------------------------------
+    # print('\nEND')

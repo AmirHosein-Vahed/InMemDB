@@ -61,6 +61,12 @@ class TestPyInMemStore(unittest.TestCase):
         result = self.db.get('concur')
         self.assertEqual(result, 9)
 
+    def test_lpush_and_rpop(self):
+        self.db.lpush('my_list', 1, 2, 3)
+        first_element = self.db.rpop('my_list')
+        self.assertEqual(first_element, 3)
+        second_element = self.db.rpop('my_list')
+        self.assertEqual(second_element, 2)
 
 if __name__ == '__main__':
     res = unittest.TextTestRunner().run(unittest.defaultTestLoader.loadTestsFromModule(sys.modules[__name__]))
