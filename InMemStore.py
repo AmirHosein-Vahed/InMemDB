@@ -64,7 +64,7 @@ class PyInMemStore:
             if not self._key_exists(key) and key not in self._transactions:
                 self._transactions[key] = {'value': [], 'ttl': -1}
                 # self.data[key] = {'value': [], 'ttl': -1}
-            self._transactions[key]['value'].extend(*args)
+            self._transactions[key]['value'].extend(args)
 
     # Thread safe rpop command from cmmited data
     def rpop(self, key):

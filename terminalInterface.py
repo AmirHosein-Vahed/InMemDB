@@ -40,7 +40,7 @@ class CLI:
 
                 case "LSET":
                     if validate.lpush_command(input_command):
-                        self.db.lpush(input_command[1], input_command[2:])
+                        self.db.lpush(input_command[1], *input_command[2:])
 
                 case "LPOP":
                     if validate.lpop_command(input_command):
