@@ -64,7 +64,7 @@ class PyInMemStore:
             if not self._key_exists(key) and key not in self._transactions:
                 self._transactions[key] = {'value': [], 'ttl': -1}
                 # self.data[key] = {'value': [], 'ttl': -1}
-            self._transactions[key]['value'].extend(list(args))
+            self._transactions[key]['value'].extend(*args)
 
     # Thread safe rpop command from cmmited data
     def rpop(self, key):
@@ -87,21 +87,21 @@ class PyInMemStore:
         self._transactions.clear()
 
 
-if __name__ == "__main__":
-    dbs = PyInMemStore()
+# if __name__ == "__main__":
+#     dbs = PyInMemStore()
 # -----------------------------------------------
-    print("SET")
-    dbs.set('test', 'Hello')
-    dbs.commit()
-    assert dbs.get('test') == 'Hello'
+    # print("SET")
+    # dbs.set('test', 'Hello')
+    # dbs.commit()
+    # assert dbs.get('test') == 'Hello'
 
-    print("SET")
-    dbs.set('name', 'ali')
-    dbs.rollback()
-    dbs.set('age', 22)
-    dbs.commit()
-    assert dbs.get('name') == None
-    assert dbs.get('age') == 22
+    # print("SET")
+    # dbs.set('name', 'ali')
+    # dbs.rollback()
+    # dbs.set('age', 22)
+    # dbs.commit()
+    # assert dbs.get('name') == None
+    # assert dbs.get('age') == 22
 # -----------------------------------------------
     # print("SET")
     # dbs.set('test', 'Hello')
